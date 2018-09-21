@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的导航</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main >
+      <div class="wrapper" id="zhangsan">
+
+      </div>      
+  </main> 
+  <script>
+      var keys = { /*数组嵌套 等价于{0：‘z’,1:'x',...,length:7}*/
+          "0": ["q","w","e","r","t","y","u","i","o","p"],
+          "1": ["a","s","d","f","g","h","j","k","l"],
+          "2": ["z","x","c","v","b","n","m"],
+          length: 3  
+      }
+      var hash = {
+        "q": "qq.com",
+        "w": "weibo.com",
+        "e": "ele.com",
+        "r": "renren.com",
+        "t": "taobao.com",
+        "y": "youtube.com",
+        "u": "uc.com",
+        "i": "iqiyi.com",
+        "o": "opera.com",
+        "p": undefined,
+        "z": "zhihu.com",
+        "m": "mcdonalds.com.cn"
+      }
+      //取出localstorage中的zzz对应的hash
+      hashInlocalStorage = JSON.parse(localStorage.getItem('zzz') || 'null')
+      if(hashInlocalStorage){
+          hash = hashInlocalStorage
+      } //如果hashInlocalStorage存在，则将其放入hash里替换hash
+
+      index = 0 //遍历keys，生成 kbd 标签
+      while(index < keys.length){ /*也可以写成keys[length]*/
+        div1 = document.createElement("div")/*创建一个叫div的元素*/
+        zhangsan.appendChild(div1)/*将div1添加到zhangsan（对应的元素）里去*/
+        row = keys[index]/*相当于遍历keys 第一个数组  第二个数组 第三个数组*/
+        /*console.log(row)打印row*/
+        index2 = 0
+        while(index2 < row.length){//0-9  0-8  0-6
+          kbd1 = document.createElement("kbd")
+          kbd1.textContent = row[index2] /*此处不能写成row.index2，不知道为啥*/
+          buttonX = document.createElement('button')//创建button按钮
+          buttonX.textContent = '编辑'//按钮名字为编辑
+          buttonX.id = row[index2]//将按钮的ID和键字母对应，方便后面更改网址
+          buttonX.onclick = function(asdfasefwffa){
+              //asdfasefwffa['target']里就是用户点击的元素    
+              // 这个循环就是用来生成button后绑定点击事件
+            key = asdfasefwffa.target.id //将点击的元素的ID给key
+            x = prompt('请输入一个要更换的网址')
+            hash[key] = x
+            localStorage.setItem('zzz',JSON.stringify(hash))
+            console.log(hash)
+            }
+          kbd1.appendChild(buttonX)//将button作为子元素添加到kbd里
+          div1.appendChild(kbd1) 
+          index2 = index2 + 1   
+        }
+    
+        index = index + 1
+      }  
+      document.onkeypress = function(asdfasefwffa){
+         /* console.log('你输入了一个键')
+          console.log(asdfasefwffa)*/
+      key = asdfasefwffa['key'] /*将用户输入的字母（此处）提取出来给key*/
+      website = hash[key]/*将key里存的字母对应的网站给website*/
+      window.open('http://'+website ,'_blank') /*location.herf ='http://'+website 这个是在当前页面打开*/
+      }
+  </script> 
+</body>
+</html>

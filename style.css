@@ -1,0 +1,21 @@
+*{margin: 0; padding: 0;}
+a{text-decoration: none;}
+kbd{border: 1px solid red;width: 4em;height: 4em;display: inline-block;
+    text-transform: uppercase;position: relative;/*将小写变成大写*/}
+kbd > button{
+    position: absolute;
+    left: 0;
+    bottom: 0; 
+    display: none; /*刚开始不显示，和下面的hover连起来展现效果*/ 
+}
+kbd:hover > button{
+    display: inline-block;
+}
+main{text-align: center;}
+.wrapper{display: inline-block;}  /*将大的div变成内联元素*/  
+.wrapper > div:nth-child(2){ /*div:nth-child(2)表示父元素中子元素为第二的并且名字为div的标签被选中*/
+    margin-left: 2em;
+}    
+.wrapper> div:nth-child(3){ /*用class 的话前面要加. 用id的话前面要加# */
+    margin-left: 4em;
+} 
