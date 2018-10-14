@@ -1,81 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>我的导航</title>
-    <link rel="stylesheet" href="./style.css">
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+  <title>我的导航</title>
+  <link rel='stylesheet' href='./style.css'>
 </head>
+
 <body>
-  <main >
-      <div class="wrapper" id="zhangsan">
+  <main>
+    <div class='wrapper' id='main'>
 
-      </div>      
-  </main> 
+    </div>
+  </main>
   <script>
-      var keys = { /*数组嵌套 等价于{0：‘z’,1:'x',...,length:7}*/
-          "0": ["q","w","e","r","t","y","u","i","o","p"],
-          "1": ["a","s","d","f","g","h","j","k","l"],
-          "2": ["z","x","c","v","b","n","m"],
-          length: 3  
-      }
-      var hash = {
-        "q": "qq.com",
-        "w": "weibo.com",
-        "e": "ele.com",
-        "r": "renren.com",
-        "t": "taobao.com",
-        "y": "youtube.com",
-        "u": "uc.com",
-        "i": "iqiyi.com",
-        "o": "opera.com",
-        "p": undefined,
-        "z": "zhihu.com",
-        "m": "mcdonalds.com.cn"
-      }
-      //取出localstorage中的zzz对应的hash
-      hashInlocalStorage = JSON.parse(localStorage.getItem('zzz') || 'null')
-      if(hashInlocalStorage){
-          hash = hashInlocalStorage
-      } //如果hashInlocalStorage存在，则将其放入hash里替换hash
+    //1、初始化数据
 
-      index = 0 //遍历keys，生成 kbd 标签
-      while(index < keys.length){ /*也可以写成keys[length]*/
-        div1 = document.createElement("div")/*创建一个叫div的元素*/
-        zhangsan.appendChild(div1)/*将div1添加到zhangsan（对应的元素）里去*/
-        row = keys[index]/*相当于遍历keys 第一个数组  第二个数组 第三个数组*/
-        /*console.log(row)打印row*/
-        index2 = 0
-        while(index2 < row.length){//0-9  0-8  0-6
-          kbd1 = document.createElement("kbd")
-          kbd1.textContent = row[index2] /*此处不能写成row.index2，不知道为啥*/
-          buttonX = document.createElement('button')//创建button按钮
-          buttonX.textContent = '编辑'//按钮名字为编辑
-          buttonX.id = row[index2]//将按钮的ID和键字母对应，方便后面更改网址
-          buttonX.onclick = function(asdfasefwffa){
-              //asdfasefwffa['target']里就是用户点击的元素    
-              // 这个循环就是用来生成button后绑定点击事件
-            key = asdfasefwffa.target.id //将点击的元素的ID给key
-            x = prompt('请输入一个要更换的网址')
-            hash[key] = x
-            localStorage.setItem('zzz',JSON.stringify(hash))
-            console.log(hash)
-            }
-          kbd1.appendChild(buttonX)//将button作为子元素添加到kbd里
-          div1.appendChild(kbd1) 
-          index2 = index2 + 1   
-        }
-    
-        index = index + 1
-      }  
-      document.onkeypress = function(asdfasefwffa){
-         /* console.log('你输入了一个键')
-          console.log(asdfasefwffa)*/
-      key = asdfasefwffa['key'] /*将用户输入的字母（此处）提取出来给key*/
-      website = hash[key]/*将key里存的字母对应的网站给website*/
-      window.open('http://'+website ,'_blank') /*location.herf ='http://'+website 这个是在当前页面打开*/
+    var hashA = init()
+    var keys = hashA['keys']
+    var hash = hashA['hash']
+
+    //2、生成键盘
+
+    generateKeyboard(keys, hash)
+
+    //3、监听用户
+    listenToUser(hash)
+
+    //下面是工具函数 
+    function getFromlocalStorage(name) {
+      console.log(hash,keys)
+      console.log(localStorage.getItem(name))
+      return JSON.parse(localStorage.getItem(name) || 'null')
+    }
+
+    function tag(tagName, attributes) {
+      var element = document.createElement(tagName)
+      for (var key in attributes) {
+        element[key] = attributes[key]
       }
-  </script> 
+      return element
+    }
+
+    function createSpan(textContent) {
+      var span = tag('span')//用span包住字母方便调整位置
+      span.textContent = textContent
+      span.className = 'text'
+      return span
+    }
+
+    function createImg(domain) {
+      var img = tag('img')
+      if (domain) {
+        img.src = 'http://' + domain + '/favicon.ico'
+      } else {
+        img.src = 'https://i.loli.net/2018/09/28/5badcd1f23f7b.jpg'
+      }
+      img.onerror = function (error1) {
+        // console.log('下载失败了') //console.log(error)
+        error1.target.src = 'https://i.loli.net/2018/09/28/5badcd1f23f7b.jpg'
+      }
+      return img
+    }
+
+    function createButton(id) {
+      var button = tag('button')//创建button按钮
+      button.textContent = '编辑'//按钮名字为编辑
+      button.id = id//将按钮的ID和键字母对应，方便后面更改网址
+      button.onclick = function (asdfasefwffa) {
+        //asdfasefwffa['target']里就是用户点击的元素    
+        // 这个循环就是用来生成button后绑定点击事件
+        var button2 = asdfasefwffa.target
+        var img2 = button2.previousSibling//previousSibling的意思是button2标签的上面一个标签，这是代码写成这个样子的
+        //key = asdfasefwffa.target.id //将点击的元素的ID给key
+        var key = button2['id']
+        var x = prompt('请输入一个要更换的网址')
+        hash[key] = x //hash变更
+        img2.src = 'http://' + x + '/favicon.ico'
+        img2.onerror = function (error) {
+          error.target.src = 'https://i.loli.net/2018/09/28/5badcd1f23f7b.jpg'
+        }
+        localStorage.setItem('zzz', JSON.stringify(hash))
+        //console.log(hash)
+      }
+      return button
+    }
+
+    function init() {
+       var keys = { /*数组嵌套 等价于{0：‘z’,1:'x',...,length:7}*/
+        '0': ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+        '1': ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+        '2': ['z', 'x', 'c', 'v', 'b', 'n', 'm'],
+        length: 3
+      }
+       var hash = {
+        'q': 'qq.com', 'w': 'weibo.com', 'e': 'ele.me', 'r': 'renren.com', 't': 'taobao.com', 'y': 'youtube.com', 'u': 'uc.cn',
+        'i': 'iqiyi.com', 'o': 'opera.com', 'p': undefined, 'z': 'zhihu.com', 'm': 'meituan.com'
+      }
+
+      var hashInlocalStorage = getFromlocalStorage('zzz')
+      if (hashInlocalStorage) {
+        hash = hashInlocalStorage
+      }
+      return {
+        'keys': keys,
+        'hash': hash
+      }
+    }
+
+    function generateKeyboard(keys, hash) {
+      for (var index = 0; index < keys.length; index = index + 1) {
+        var div = tag('div', { className: 'row' })/*创建一个叫div的元素,然后用函数的方式直接生成class*/ // div.className = 'row' 给生成的div创建一个class
+
+        main.appendChild(div)/*将div1添加到zhangsan（对应的元素）里去*/
+
+        var row = keys[index]/*相当于遍历keys 第一个数组  第二个数组 第三个数组*/
+
+        for (var index2 = 0; index2 < row.length; index2 = index2 + 1) {
+
+          var span = createSpan(row[index2])
+          var img = createImg(hash[row[index2]])
+          var button = createButton(row[index2])//创建button按钮
+
+          var kbd = tag('kbd')
+          kbd.className = 'key' //给生成的kbd添加一个class
+          kbd.appendChild(span)
+          kbd.appendChild(img)
+          kbd.appendChild(button)//将button作为子元素添加到kbd里
+          div.appendChild(kbd)
+        }
+      }
+
+      function listenToUser(hash) {
+        document.onkeypress = function (asdfasefwffa) {
+          /* console.log('你输入了一个键')
+           console.log(asdfasefwffa)*/
+          var key = asdfasefwffa['key'] /*将用户输入的字母（此处）提取出来给key*/
+          var website = hash[key]/*将key里存的字母对应的网站给website*/
+          window.open('http://' + website, '_blank') /*location.herf ='http://'+website 这个是在当前页面打开*/
+        }
+      }
+    }
+
+
+  </script>
 </body>
+
 </html>

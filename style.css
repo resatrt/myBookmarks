@@ -11,11 +11,55 @@ kbd > button{
 kbd:hover > button{
     display: inline-block;
 }
-main{text-align: center;}
-.wrapper{display: inline-block;}  /*将大的div变成内联元素*/  
+body{
+    background:blue url(./wall.jpg) no-repeat center center;
+    background-size: cover;
+}
+main{text-align: center;
+     height: 100vh;/*viewport height*/
+     display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.wrapper{/*display: inline-block;*/ /*将大的div变成内联元素*/
+      background:rgba(255,255,255,0.3);
+      border-radius: 10px;
+}   
 .wrapper > div:nth-child(2){ /*div:nth-child(2)表示父元素中子元素为第二的并且名字为div的标签被选中*/
-    margin-left: 2em;
+    margin-left: -20px;
 }    
 .wrapper> div:nth-child(3){ /*用class 的话前面要加. 用id的话前面要加# */
-    margin-left: 4em;
+    margin-left: -90px;
 } 
+.key{
+    width: 50px;
+    height: 40px;
+    border: none;
+    color: #c5c5c5;
+    border: 1px solid #373737;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #292929 0%,#111111 100%);
+    box-shadow: 0 0 0 1px #1a1b1c,0 0 0 2px #1f2020 ,0 3px 0 2px #080808 ;
+    position: relative;
+    font-size: 17px;
+    font-family: Helvetica;
+} 
+.row{
+    margin: 15px;
+}
+.row > .key{
+    margin:0 10px;
+}
+.key img{
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    position:absolute;
+    left:33%;
+    bottom: 0;
+}
+.key .text{
+    position: absolute;
+    left: 4px;
+    top: 2px;
+}
